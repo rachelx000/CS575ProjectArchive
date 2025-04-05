@@ -1,4 +1,5 @@
 .idea/
 .DS_Store
-Project0/Project0Report.docx
-Project0/~$oject0Report.docx
+Project0/*.docx
+Project0/~$*
+Project0/README.md
