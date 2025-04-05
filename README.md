@@ -6,6 +6,7 @@
   - Open the terminal, log in to the flip server using your ENGR account, and navigate to the folder
     containing the downloaded files (you might upload the downloaded files from the local first via `scp`).
   - Run the command `bash ProjectX.bash`
+<br>
 - To run the project on the **local MacOS system**:
   - Install the OpenMP library (if not already installed): `brew install libomp`
   - Set the OpenMP root path in your `~/.zshrc` file:
