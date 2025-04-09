@@ -237,7 +237,7 @@ main( int argc, char *argv[ ] )
 
 // uncomment this if you want to print output to a ready-to-use CSV file:
 
-// #define CSV
+#define CSV
 #ifdef CSV
 	fprintf(stderr, "%2d , %8d , %6.2lf\n",  NUMT, NUMTRIALS, maxPerformance);
 #else

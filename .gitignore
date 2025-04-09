@@ -1,6 +1,5 @@
 .idea/
 .DS_Store
-Project0/*.docx
-Project0/~$*
-Project0/README.md
-Project1/test*.txt
+*.docx
+~$*
+*test*.txt
