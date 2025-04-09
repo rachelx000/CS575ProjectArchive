@@ -92,7 +92,6 @@ TimeOfDaySeed( )
 
 	double seconds = difftime( now, mktime(&jan01) );
 	unsigned int seed = (unsigned int)( seconds );
-	if( DEBUG ) fprintf( stderr, "seconds: %f, seeds: %u, expected seeds: %f\n", seconds, seed, 1000.*seconds);
 	srand( seed );
 }
 
@@ -206,7 +205,7 @@ main( int argc, char *argv[ ] )
 						tmax = t2;
 
 					// how far does the ball land horizontlly from the edge of the cliff?
-					float upperDist = vx * tmax  -  g;
+					float upperDist = vx * tmax - g;
 
 					// see if the ball hits the castle:
 					if(  fabs( upperDist - d ) <= TOL )
@@ -239,7 +238,6 @@ main( int argc, char *argv[ ] )
 // uncomment this if you want to print output to a ready-to-use CSV file:
 
 // #define CSV
-
 #ifdef CSV
 	fprintf(stderr, "%2d , %8d , %6.2lf\n",  NUMT, NUMTRIALS, maxPerformance);
 #else
