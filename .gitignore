@@ -3,3 +3,5 @@
 *.docx
 ~$*
 *test*.txt
+*.xlsx
+*.png
