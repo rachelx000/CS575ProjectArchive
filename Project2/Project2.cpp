@@ -18,6 +18,10 @@
 #include <time.h>
 #include <omp.h>
 
+#ifndef DEBUG
+#define DEBUG		false
+#endif
+
 unsigned int seed = 0;
 int	    NowYear;		// 2025- 2030
 int	    NowMonth;		// 0 - 11
@@ -232,13 +236,17 @@ void Watcher( ) {
 
         // Once the update of all the current state have been completed
         // print the updated current state:
-#define CSV
+// #define CSV
 #ifdef  CSV
-		fprintf(stderr, "%4d , %6.2lf, %6.2lf, %6.2lf, %4d, %4d\n",
+		fprintf(stderr, "%4d, %6.2lf, %6.2lf, %6.2lf, %4d, %4d\n",
             TotalMonth, NowPrecip, NowTemp, NowHeight, NowNumDeer, NowNumWolf);
 #else
-		fprintf(stderr, "Year: %4d, Month: %2d, Precip (inches): %6.2lf, Temp (°F): %6.2lf, Height: %6.2lf, Deer #: %4d, Wolf #: %4d\n",
-			NowYear, NowMonth, NowPrecip, NowTemp, NowHeight, NowNumDeer, NowNumWolf);
+        if ( DEBUG )
+			fprintf(stderr, "Year: %4d, Month: %2d, Total Month: %2d, Precip (inches): %6.2lf, Temp (°F): %6.2lf, Height: %6.2lf, Deer #: %4d, Wolf #: %4d\n",
+				NowYear, NowMonth+1, TotalMonth, NowPrecip, NowTemp, NowHeight, NowNumDeer, NowNumWolf);
+        else
+        	fprintf(stderr, "%4d, %2d, %2d, %6.2lf, %6.2lf, %6.2lf, %4d, %4d\n",
+			  	NowYear, NowMonth+1, TotalMonth, NowPrecip, NowTemp, NowHeight, NowNumDeer, NowNumWolf);
 #endif
        	// increment time accordingly:
         NowMonth++;
