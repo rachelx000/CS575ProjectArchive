@@ -33,7 +33,7 @@ float	NowHeight;		// grain height in inches
 int	    NowNumDeer;		// number of deer in the current population
 int 	NowNumWolf;		// number of wolves in the current population
 
-const float GRAIN_GROWS_PER_MONTH     =	    50.0;
+const float GRAIN_GROWS_PER_MONTH     =	    100.0;
 const float ONE_DEER_EATS_PER_MONTH   =		1.0;
 
 const float AVG_PRECIP_PER_MONTH      =		15.0;	// average
