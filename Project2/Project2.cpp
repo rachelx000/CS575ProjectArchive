@@ -86,7 +86,7 @@ int main( int argc, char *argv[ ] ) {
 	// starting state (feel free to change this if you want):
 	NowNumDeer = 20;
     NowNumWolf = 5;
-	NowHeight  = 100.;
+	NowHeight  = 300.;
 
     // starting temperature and precipitation
 	float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );
@@ -236,7 +236,7 @@ void Watcher( ) {
 
         // Once the update of all the current state have been completed
         // print the updated current state:
-// #define CSV
+#define CSV
 #ifdef  CSV
 		fprintf(stderr, "%4d, %6.2lf, %6.2lf, %6.2lf, %4d, %4d\n",
             TotalMonth, NowPrecip, NowTemp, NowHeight, NowNumDeer, NowNumWolf);
