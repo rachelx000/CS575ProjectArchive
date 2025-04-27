@@ -44,11 +44,11 @@ const float MIDTEMP                   =		40.0;
 const float MIDPRECIP                 =	    10.0;
 
 // Constants for Lotka-Volterra model that simulates the prey/predator relationship between deer and wolves:
-const float alpha = 0.3;		// growth rate of the prey (deer)
-const float beta  = 0.015;		// death rate of the prey (deer)
-const float delta =	0.01;		// growth rate of the predator (wolf)
-const float gamma = 0.9;		// death rate of the predator (wolf)
-const float dt	  = 1;			// time step - 1 month
+const float ALPHA = 0.3;		// growth rate of the prey (deer)
+const float BETA  = 0.015;		// death rate of the prey (deer)
+const float DELTA =	0.01;		// growth rate of the predator (wolf)
+const float GAMMA = 0.9;		// death rate of the predator (wolf)
+const float DT	  = 1;			// time step - 1 month
 
 // Variables for the custom barriers:
 omp_lock_t		Lock;
@@ -57,7 +57,7 @@ volatile int	NumAtBarrier;
 volatile int	NumGone;
 
 // Functions for the custom barriers:
-void InitBarrier( int );
+void InitBarrier( int n );
 void WaitBarrier( );
 
 // Functions for the tasks for grain-growing operations:
@@ -67,9 +67,9 @@ void Wolf( );
 void Watcher( );
 
 // Helper functions for mathematical operations:
-float Ranf( float, float );
-int   Ranf( int, int );
-float SQR( float );
+float Ranf( float low, float high);
+int   Ranf( int ilow, int ihigh);
+float SQR( float x);
 
 // Main program:
 int main( int argc, char *argv[ ] ) {
@@ -134,7 +134,7 @@ void Deer( ) {
 		carryingCapacity = (int)( NowHeight );
 
 		// Lotka-Volterra equation for the prey population
-		int deltaDeer =  ( alpha * NowNumDeer - beta * NowNumDeer * NowNumWolf) * dt;
+		int deltaDeer =  ( ALPHA * (float)NowNumDeer - BETA * (float)NowNumDeer * (float)NowNumWolf) * (float)DT;
 		nextNumDeer += deltaDeer;
 
 		if( nextNumDeer < carryingCapacity )
@@ -168,7 +168,7 @@ void Wolf( ) {
 		carryingCapacity = NowNumDeer;
 
         // Lotka-Volterra equation for the predator population
-        int deltaWolf =  (delta * NowNumDeer * NowNumWolf - gamma * NowNumWolf) * dt;
+        int deltaWolf =  (DELTA * (float)NowNumDeer * (float)NowNumWolf - GAMMA * (float)NowNumWolf) * (float)DT;
 		nextNumWolf += deltaWolf;
 
 		if( nextNumWolf > carryingCapacity )
