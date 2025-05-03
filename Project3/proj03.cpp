@@ -1,5 +1,5 @@
 /*
-*
+ *
  * Name: Rachel Xing
  * Email: xingru@oregonstate.edu
  *
@@ -20,7 +20,7 @@
 
 // setting the number of threads:
 #ifndef NUMT
-#define NUMT		    8
+#define NUMT		    1
 #endif
 
 // setting the number of capitals we want to try:
@@ -35,7 +35,7 @@
 // how many tries to discover the maximum performance:
 #define NUMTRIES		30
 
-// #define CSV
+#define CSV
 
 struct city
 {
@@ -79,7 +79,7 @@ int
 main( int argc, char *argv[ ] )
 {
 #ifdef _OPENMP
-		fprintf( stderr, "OpenMP is supported -- version = %d\n", _OPENMP );
+	// fprintf( stderr, "OpenMP is supported -- version = %d\n", _OPENMP );
 #else
         fprintf( stderr, "No OpenMP support!\n" );
         return 1;

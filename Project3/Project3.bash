@@ -5,5 +5,6 @@ do
   do
      g++   proj03.cpp  -DNUMT=$t -DNUMCAPITALS=$n  -o proj03  -lm  -fopenmp
     ./proj03
+    rm ./proj03
   done
 done
