@@ -6,3 +6,4 @@ find_package(OpenMP COMPONENTS CXX REQUIRED)
 
 add_executable(Project3 proj03.cpp)
 target_link_libraries(Project3 PRIVATE OpenMP::OpenMP_CXX)
+target_compile_definitions(Project3 PRIVATE NUMCAPITALS=${NUMCAPITALS})
