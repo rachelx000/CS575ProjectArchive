@@ -191,7 +191,7 @@ main( int argc, char *argv[ ] )
 		}
 	}
 #ifdef CSV
-        fprintf(stderr, "%2d , %4d , %4d , %8.3lf:\n", NUMT, (int) NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
+        fprintf(stderr, "%2d , %4d , %4d , %8.3lf\n", NUMT, (int) NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
 #else
         fprintf(stderr, "%2d threads : %4d cities ; %4d capitals; megatrials/sec = %8.3lf\n",
                 NUMT, (int) NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
