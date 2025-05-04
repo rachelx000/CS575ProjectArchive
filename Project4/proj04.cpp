@@ -36,6 +36,11 @@
 #define DEBUG		true
 #endif
 
+// setting the number of threads:
+#ifndef NUMT
+#define NUMT		1
+#endif
+
 ALIGNED float A[ARRAYSIZE];
 ALIGNED float B[ARRAYSIZE];
 ALIGNED float C[ARRAYSIZE];
@@ -50,15 +55,18 @@ float	NonSimdMulSum( float *, float *, int );
 int
 main( int argc, char *argv[ ] )
 {
+	omp_set_num_threads( NUMT );	// set the number of threads to use in parallelizing the for-loop:`
+
 	for( int i = 0; i < ARRAYSIZE; i++ )
 	{
 		A[i] = sqrtf( (float)(i+1) );
 		B[i] = sqrtf( (float)(i+1) );
 	}
 
-	fprintf( stderr, "%12d\t", ARRAYSIZE );
+	fprintf( stderr, "%12d, %4d\t", ARRAYSIZE, NUMT );
 
 	double maxPerformance = 0.;
+	#pragma omp parallel for shared(A, B, C)
 	for( int t = 0; t < NUMTRIES; t++ )
 	{
 		double time0 = omp_get_wtime( );
@@ -75,6 +83,7 @@ main( int argc, char *argv[ ] )
 		fprintf( stderr, "\nNon-SIMD SimdMul:\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
 
 	maxPerformance = 0.;
+	#pragma omp parallel for shared(A, B, C)
 	for( int t = 0; t < NUMTRIES; t++ )
 	{
 		double time0 = omp_get_wtime( );
@@ -94,6 +103,7 @@ main( int argc, char *argv[ ] )
 
 	maxPerformance = 0.;
 	float sumn, sums;
+	#pragma omp parallel for shared(A, B)
 	for( int t = 0; t < NUMTRIES; t++ )
 	{
 		double time0 = omp_get_wtime( );
@@ -108,6 +118,7 @@ main( int argc, char *argv[ ] )
 	mmn = megaMultAdds;
 
 	maxPerformance = 0.;
+	#pragma omp parallel for shared(A, B)
 	for( int t = 0; t < NUMTRIES; t++ )
 	{
 		double time0 = omp_get_wtime( );
