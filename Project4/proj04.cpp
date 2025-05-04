@@ -160,13 +160,18 @@ main( int argc, char *argv[ ] )
       	// set number of threads
     	int t = threads[i];
     	omp_set_num_threads( t );
+        double num_elements_per_core = (double)ARRAYSIZE / double(t);
 
         double maxPerformance = 0.;
-		#pragma omp parallel for default(none) shared(A, B, C)
 		for( int t = 0; t < NUMTRIES; t++ )
 		{
 			double time0 = omp_get_wtime( );
-			NonSimdMul( A, B, C, ARRAYSIZE );
+			#pragma omp parallel
+			{
+				int thisThread = omp_get_thread_num( );
+				int first = thisThread * num_elements_per_core;
+				NonSimdMul( &A[first], &B[first], &C[first], num_elements_per_core );
+			}
 			double time1 = omp_get_wtime( );
 			double perf = (double)ARRAYSIZE / (time1 - time0);
 			if( perf > maxPerformance )
@@ -187,11 +192,15 @@ main( int argc, char *argv[ ] )
     		fprintf( stderr, "\nNon-SIMD+%d Cores SimdMul:\t[ %8.1f , %8.1f ]\n", t, C[0], C[ARRAYSIZE-1]);
 
 		maxPerformance = 0.;
-		#pragma omp parallel for default(none) shared(A, B, C)
 		for( int t = 0; t < NUMTRIES; t++ )
 		{
 			double time0 = omp_get_wtime( );
-			SimdMul( A, B, C, ARRAYSIZE );
+			#pragma omp parallel
+			{
+				int thisThread = omp_get_thread_num( );
+				int first = thisThread * num_elements_per_core;
+            	SimdMul( &A[first], &B[first], &C[first], num_elements_per_core );
+            }
 			double time1 = omp_get_wtime( );
 			double perf = (double)ARRAYSIZE / (time1 - time0);
 			if( perf > maxPerformance )
@@ -213,11 +222,16 @@ main( int argc, char *argv[ ] )
 
 		maxPerformance = 0.;
 		float sumn, sums;
-		#pragma omp parallel for default(none) shared(A, B)
 		for( int t = 0; t < NUMTRIES; t++ )
 		{
 			double time0 = omp_get_wtime( );
-			sumn = NonSimdMulSum( A, B, ARRAYSIZE );
+			#pragma omp parallel reduction(+:sumn)
+			{
+				int thisThread = omp_get_thread_num( );
+				int first = thisThread * num_elements_per_core;
+                double sum = NonSimdMul( &A[first], &B[first], num_elements_per_core );
+				sumn += sum
+			}
 			double time1 = omp_get_wtime( );
 			double perf = (double)ARRAYSIZE / (time1 - time0);
 			if( perf > maxPerformance )
@@ -236,11 +250,17 @@ main( int argc, char *argv[ ] )
     		fprintf( stderr, "(%6.2lf)\n", speedup );
 
 		maxPerformance = 0.;
-		#pragma omp parallel for default(none) shared(A, B)
 		for( int t = 0; t < NUMTRIES; t++ )
 		{
 			double time0 = omp_get_wtime( );
 			sums = SimdMulSum( A, B, ARRAYSIZE );
+			#pragma omp parallel reduction(+:sums)
+			{
+				int thisThread = omp_get_thread_num( );
+				int first = thisThread * num_elements_per_core;
+				double sum = NonSimdMul( &A[first], &B[first], num_elements_per_core );
+				sums += sum
+			}
 			double time1 = omp_get_wtime( );
 			double perf = (double)ARRAYSIZE / (time1 - time0);
 			if( perf > maxPerformance )
