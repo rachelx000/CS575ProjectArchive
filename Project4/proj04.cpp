@@ -160,7 +160,7 @@ main( int argc, char *argv[ ] )
       	// set number of threads
     	int t = threads[i];
     	omp_set_num_threads( t );
-        double num_elements_per_core = (double)ARRAYSIZE / double(t);
+        int num_elements_per_core = ARRAYSIZE / t;
 
         double maxPerformance = 0.;
 		for( int t = 0; t < NUMTRIES; t++ )
@@ -229,8 +229,8 @@ main( int argc, char *argv[ ] )
 			{
 				int thisThread = omp_get_thread_num( );
 				int first = thisThread * num_elements_per_core;
-                double sum = NonSimdMul( &A[first], &B[first], num_elements_per_core );
-				sumn += sum
+                float sum = NonSimdMulSum( &A[first], &B[first], num_elements_per_core );
+				sumn += sum;
 			}
 			double time1 = omp_get_wtime( );
 			double perf = (double)ARRAYSIZE / (time1 - time0);
@@ -258,8 +258,8 @@ main( int argc, char *argv[ ] )
 			{
 				int thisThread = omp_get_thread_num( );
 				int first = thisThread * num_elements_per_core;
-				double sum = NonSimdMul( &A[first], &B[first], num_elements_per_core );
-				sums += sum
+				float sum = SimdMulSum( &A[first], &B[first], num_elements_per_core );
+				sums += sum;
 			}
 			double time1 = omp_get_wtime( );
 			double perf = (double)ARRAYSIZE / (time1 - time0);
