@@ -28,7 +28,7 @@
 #define NUMTRIES	100
 
 #ifndef ARRAYSIZE
-#define ARRAYSIZE	1024*1024
+#define ARRAYSIZE	400
 #endif
 
 // print debugging messages?
@@ -37,7 +37,7 @@
 #endif
 
 // print CSV?
-#define CSV			true
+#define CSV			false
 
 // Extra credit?
 #define EC			false
@@ -85,7 +85,7 @@ main( int argc, char *argv[ ] )
 		fprintf( stderr, "N %10.2lf\t", megaMults );
 	double mmn = megaMults;
 	if ( DEBUG )
-		fprintf( stderr, "\nNon-SIMD SimdMul:\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
+		fprintf( stderr, "\nNon-SIMD SimdMul:\t\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
 
 	maxPerformance = 0.;
 	for( int t = 0; t < NUMTRIES; t++ )
@@ -109,7 +109,7 @@ main( int argc, char *argv[ ] )
 	else
 		fprintf( stderr, "(%6.2lf)\t", speedup );
 	if ( DEBUG )
-		fprintf( stderr, "\nSIMD SimdMul:\t\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
+		fprintf( stderr, "\nSIMD SimdMul:\t\t\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
 
 	maxPerformance = 0.;
 	float sumn, sums;
@@ -151,7 +151,7 @@ main( int argc, char *argv[ ] )
 	else
 		fprintf( stderr, "(%6.2lf)\n", speedup );
     if ( DEBUG )
-		fprintf( stderr, "MulSum:\t\t\t[ %8.1f , %8.1f ]\n", sumn, sums );
+		fprintf( stderr, "MulSum:\t\t\t\t[ %8.1f , %8.1f ]\n", sumn, sums );
 
     /* 		Extra Credit	*/
     int threads[] = {1, 2, 4};
@@ -221,9 +221,9 @@ main( int argc, char *argv[ ] )
 			fprintf( stderr, "\nSIMD+%d Cores SimdMul:\t\t[ %8.1f , %8.1f ]\n", t, C[0], C[ARRAYSIZE-1]);
 
 		maxPerformance = 0.;
-		float sumn, sums;
 		for( int t = 0; t < NUMTRIES; t++ )
 		{
+		        sumn = 0.;
 			double time0 = omp_get_wtime( );
 			#pragma omp parallel reduction(+:sumn)
 			{
@@ -247,13 +247,13 @@ main( int argc, char *argv[ ] )
     	if ( CSV )
     		fprintf( stderr, "%6.2lf,", speedup );
     	else
-    		fprintf( stderr, "(%6.2lf)\n", speedup );
+    		fprintf( stderr, "(%6.2lf)\t", speedup );
 
 		maxPerformance = 0.;
 		for( int t = 0; t < NUMTRIES; t++ )
 		{
+			sums = 0.;
 			double time0 = omp_get_wtime( );
-			sums = SimdMulSum( A, B, ARRAYSIZE );
 			#pragma omp parallel reduction(+:sums)
 			{
 				int thisThread = omp_get_thread_num( );
