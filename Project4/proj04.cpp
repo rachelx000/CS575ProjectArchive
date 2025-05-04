@@ -36,6 +36,13 @@
 #define DEBUG		true
 #endif
 
+// print CSV?
+#define CSV			true
+
+// Extra credit?
+#define EC			false
+
+
 ALIGNED float A[ARRAYSIZE];
 ALIGNED float B[ARRAYSIZE];
 ALIGNED float C[ARRAYSIZE];
@@ -56,7 +63,10 @@ main( int argc, char *argv[ ] )
 		B[i] = sqrtf( (float)(i+1) );
 	}
 
-	fprintf( stderr, "%12d\t", ARRAYSIZE );
+	if ( CSV )
+		fprintf( stderr, "%12d,", ARRAYSIZE );
+	else
+		fprintf( stderr, "%12d\t", ARRAYSIZE );
 
 	double maxPerformance = 0.;
 	for( int t = 0; t < NUMTRIES; t++ )
@@ -69,7 +79,10 @@ main( int argc, char *argv[ ] )
 			maxPerformance = perf;
 	}
 	double megaMults = maxPerformance / 1000000.;
-	fprintf( stderr, "N %10.2lf\t", megaMults );
+	if ( CSV )
+		fprintf( stderr, "%10.2lf,", megaMults );
+	else
+		fprintf( stderr, "N %10.2lf\t", megaMults );
 	double mmn = megaMults;
 	if ( DEBUG )
 		fprintf( stderr, "\nNon-SIMD SimdMul:\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
@@ -85,10 +98,16 @@ main( int argc, char *argv[ ] )
 			maxPerformance = perf;
 	}
 	megaMults = maxPerformance / 1000000.;
-	fprintf( stderr, "S %10.2lf\t", megaMults );
+	if ( CSV )
+		fprintf( stderr, "%10.2lf,", megaMults );
+	else
+		fprintf( stderr, "S %10.2lf\t", megaMults );
 	double mms = megaMults;
 	double speedup = mms/mmn;
-	fprintf( stderr, "(%6.2lf)\t", speedup );
+	if ( CSV )
+		fprintf( stderr, "%6.2lf,", speedup );
+	else
+		fprintf( stderr, "(%6.2lf)\t", speedup );
 	if ( DEBUG )
 		fprintf( stderr, "\nSIMD SimdMul:\t\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
 
@@ -104,8 +123,11 @@ main( int argc, char *argv[ ] )
 			maxPerformance = perf;
 	}
 	double megaMultAdds = maxPerformance / 1000000.;
-	fprintf( stderr, "N %10.2lf\t", megaMultAdds );
-	mmn = megaMultAdds;
+	if ( CSV )
+		fprintf( stderr, "%10.2lf,", megaMultAdds );
+	else
+		fprintf( stderr, "N %10.2lf\t", megaMultAdds );
+	double mmrn = megaMultAdds;
 
 	maxPerformance = 0.;
 	for( int t = 0; t < NUMTRIES; t++ )
@@ -118,12 +140,126 @@ main( int argc, char *argv[ ] )
 			maxPerformance = perf;
 	}
 	megaMultAdds = maxPerformance / 1000000.;
-	fprintf( stderr, "S %10.2lf\t", megaMultAdds );
-	mms = megaMultAdds;
-	speedup = mms/mmn;
-	fprintf( stderr, "(%6.2lf)\n", speedup );
+	if ( CSV )
+		fprintf( stderr, "%10.2lf,", megaMultAdds );
+	else
+		fprintf( stderr, "S %10.2lf\t", megaMultAdds );
+	double mmrs = megaMultAdds;
+	speedup = mmrs/mmrn;
+	if ( CSV )
+		fprintf( stderr, "%6.2lf,", speedup );
+	else
+		fprintf( stderr, "(%6.2lf)\n", speedup );
     if ( DEBUG )
 		fprintf( stderr, "MulSum:\t\t\t[ %8.1f , %8.1f ]\n", sumn, sums );
+
+    /* 		Extra Credit	*/
+    int threads[] = {1, 2, 4};
+
+    for( int i = 0; i < 3; i++) {
+      	// set number of threads
+    	int t = threads[i];
+    	omp_set_num_threads( t );
+
+        double maxPerformance = 0.;
+		#pragma omp parallel for default(none) shared(A, B, C)
+		for( int t = 0; t < NUMTRIES; t++ )
+		{
+			double time0 = omp_get_wtime( );
+			NonSimdMul( A, B, C, ARRAYSIZE );
+			double time1 = omp_get_wtime( );
+			double perf = (double)ARRAYSIZE / (time1 - time0);
+			if( perf > maxPerformance )
+				maxPerformance = perf;
+		}
+		double megaMults = maxPerformance / 1000000.;
+		if ( CSV )
+			fprintf( stderr, "%10.2lf,", megaMults );
+		else
+			fprintf( stderr, "N+%d %10.2lf\t", t, megaMults );
+    	mms = megaMults;
+    	speedup = mms/mmn;
+    	if ( CSV )
+    		fprintf( stderr, "%6.2lf,", speedup );
+    	else
+    		fprintf( stderr, "(%6.2lf)\t", speedup );
+    	if ( DEBUG )
+    		fprintf( stderr, "\nNon-SIMD+%d Cores SimdMul:\t[ %8.1f , %8.1f ]\n", t, C[0], C[ARRAYSIZE-1]);
+
+		maxPerformance = 0.;
+		#pragma omp parallel for default(none) shared(A, B, C)
+		for( int t = 0; t < NUMTRIES; t++ )
+		{
+			double time0 = omp_get_wtime( );
+			SimdMul( A, B, C, ARRAYSIZE );
+			double time1 = omp_get_wtime( );
+			double perf = (double)ARRAYSIZE / (time1 - time0);
+			if( perf > maxPerformance )
+				maxPerformance = perf;
+		}
+		megaMults = maxPerformance / 1000000.;
+		if ( CSV )
+			fprintf( stderr, "%10.2lf,", megaMults );
+		else
+			fprintf( stderr, "S+%d %10.2lf\t", t, megaMults );
+		mms = megaMults;
+		speedup = mms/mmn;
+		if ( CSV )
+			fprintf( stderr, "%6.2lf,", speedup );
+		else
+			fprintf( stderr, "(%6.2lf)\t", speedup );
+		if ( DEBUG )
+			fprintf( stderr, "\nSIMD+%d Cores SimdMul:\t\t[ %8.1f , %8.1f ]\n", t, C[0], C[ARRAYSIZE-1]);
+
+		maxPerformance = 0.;
+		float sumn, sums;
+		#pragma omp parallel for default(none) shared(A, B)
+		for( int t = 0; t < NUMTRIES; t++ )
+		{
+			double time0 = omp_get_wtime( );
+			sumn = NonSimdMulSum( A, B, ARRAYSIZE );
+			double time1 = omp_get_wtime( );
+			double perf = (double)ARRAYSIZE / (time1 - time0);
+			if( perf > maxPerformance )
+				maxPerformance = perf;
+		}
+		double megaMultAdds = maxPerformance / 1000000.;
+		if ( CSV )
+			fprintf( stderr, "%10.2lf,", megaMultAdds );
+		else
+			fprintf( stderr, "N+%d %10.2lf\t", t, megaMultAdds );
+    	mmrs = megaMultAdds;
+    	speedup = mmrs/mmrn;
+    	if ( CSV )
+    		fprintf( stderr, "%6.2lf,", speedup );
+    	else
+    		fprintf( stderr, "(%6.2lf)\n", speedup );
+
+		maxPerformance = 0.;
+		#pragma omp parallel for default(none) shared(A, B)
+		for( int t = 0; t < NUMTRIES; t++ )
+		{
+			double time0 = omp_get_wtime( );
+			sums = SimdMulSum( A, B, ARRAYSIZE );
+			double time1 = omp_get_wtime( );
+			double perf = (double)ARRAYSIZE / (time1 - time0);
+			if( perf > maxPerformance )
+				maxPerformance = perf;
+		}
+		megaMultAdds = maxPerformance / 1000000.;
+		if ( CSV )
+			fprintf( stderr, "%10.2lf,", megaMultAdds );
+		else
+			fprintf( stderr, "S+%d %10.2lf\t", t, megaMultAdds );
+    	mmrs = megaMultAdds;
+    	speedup = mmrs/mmrn;
+    	if ( CSV )
+    		fprintf( stderr, "%6.2lf,", speedup );
+    	else
+    		fprintf( stderr, "(%6.2lf)\n", speedup );
+    	if ( DEBUG )
+    		fprintf( stderr, "MulSum+%d Cores:\t\t\t[ %8.1f , %8.1f ]\n", t, sumn, sums );
+    }
 
 	return 0;
 }
