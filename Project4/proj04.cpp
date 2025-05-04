@@ -33,7 +33,7 @@
 
 // print debugging messages?
 #ifndef DEBUG
-#define DEBUG		false
+#define DEBUG		true
 #endif
 
 ALIGNED float A[ARRAYSIZE];
@@ -72,7 +72,7 @@ main( int argc, char *argv[ ] )
 	fprintf( stderr, "N %10.2lf\t", megaMults );
 	double mmn = megaMults;
 	if ( DEBUG )
-		fprintf( stderr, "Non-SIMD SimdMul: [ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
+		fprintf( stderr, "\nNon-SIMD SimdMul:\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
 
 	maxPerformance = 0.;
 	for( int t = 0; t < NUMTRIES; t++ )
@@ -90,7 +90,7 @@ main( int argc, char *argv[ ] )
 	double speedup = mms/mmn;
 	fprintf( stderr, "(%6.2lf)\t", speedup );
 	if ( DEBUG )
-		fprintf( stderr, "SIMD SimdMul: [ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
+		fprintf( stderr, "\nSIMD SimdMul:\t\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
 
 	maxPerformance = 0.;
 	float sumn, sums;
@@ -123,7 +123,7 @@ main( int argc, char *argv[ ] )
 	speedup = mms/mmn;
 	fprintf( stderr, "(%6.2lf)\n", speedup );
     if ( DEBUG )
-		fprintf( stderr, "MulSum: [ %8.1f , %8.1f ]\n", sumn, sums );
+		fprintf( stderr, "MulSum:\t\t\t[ %8.1f , %8.1f ]\n", sumn, sums );
 
 	return 0;
 }
@@ -133,7 +133,7 @@ void
 NonSimdMul( float *A, float *B, float *C, int n )
 {
 	for( int i = 0; i < n; i++ ) {
-  		C[i] = A[i] + B[i];
+  		C[i] = A[i] * B[i];
     }
 }
 
