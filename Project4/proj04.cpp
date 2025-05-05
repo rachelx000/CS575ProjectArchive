@@ -28,16 +28,16 @@
 #define NUMTRIES	100
 
 #ifndef ARRAYSIZE
-#define ARRAYSIZE	400
+#define ARRAYSIZE	1000
 #endif
 
 // print debugging messages?
 #ifndef DEBUG
-#define DEBUG		true
+#define DEBUG		false
 #endif
 
 // print CSV?
-#define CSV			false
+#define CSV			true
 
 // Extra credit?
 #define EC			false
@@ -82,7 +82,7 @@ main( int argc, char *argv[ ] )
 	if ( CSV )
 		fprintf( stderr, "%10.2lf,", megaMults );
 	else
-		fprintf( stderr, "N %10.2lf\t", megaMults );
+		fprintf( stderr, "N   %10.2lf\t", megaMults );
 	double mmn = megaMults;
 	if ( DEBUG )
 		fprintf( stderr, "\nNon-SIMD SimdMul:\t\t[ %8.1f , %8.1f ]\n", C[0], C[ARRAYSIZE-1]);
@@ -101,7 +101,7 @@ main( int argc, char *argv[ ] )
 	if ( CSV )
 		fprintf( stderr, "%10.2lf,", megaMults );
 	else
-		fprintf( stderr, "S %10.2lf\t", megaMults );
+		fprintf( stderr, "\t\tS   %10.2lf\t", megaMults );
 	double mms = megaMults;
 	double speedup = mms/mmn;
 	if ( CSV )
@@ -126,7 +126,7 @@ main( int argc, char *argv[ ] )
 	if ( CSV )
 		fprintf( stderr, "%10.2lf,", megaMultAdds );
 	else
-		fprintf( stderr, "N %10.2lf\t", megaMultAdds );
+		fprintf( stderr, "N   %10.2lf\t", megaMultAdds );
 	double mmrn = megaMultAdds;
 
 	maxPerformance = 0.;
@@ -143,7 +143,7 @@ main( int argc, char *argv[ ] )
 	if ( CSV )
 		fprintf( stderr, "%10.2lf,", megaMultAdds );
 	else
-		fprintf( stderr, "S %10.2lf\t", megaMultAdds );
+		fprintf( stderr, "\t\tS   %10.2lf\t", megaMultAdds );
 	double mmrs = megaMultAdds;
 	speedup = mmrs/mmrn;
 	if ( CSV )
@@ -181,7 +181,7 @@ main( int argc, char *argv[ ] )
 		if ( CSV )
 			fprintf( stderr, "%10.2lf,", megaMults );
 		else
-			fprintf( stderr, "N+%d %10.2lf\t", t, megaMults );
+			fprintf( stderr, "\t\tN+%d %10.2lf\t", t, megaMults );
     	mms = megaMults;
     	speedup = mms/mmn;
     	if ( CSV )
@@ -229,7 +229,7 @@ main( int argc, char *argv[ ] )
 			{
 				int thisThread = omp_get_thread_num( );
 				int first = thisThread * num_elements_per_core;
-                float sum = NonSimdMulSum( &A[first], &B[first], num_elements_per_core );
+		                float sum = NonSimdMulSum( &A[first], &B[first], num_elements_per_core );
 				sumn += sum;
 			}
 			double time1 = omp_get_wtime( );
@@ -274,7 +274,10 @@ main( int argc, char *argv[ ] )
     	mmrs = megaMultAdds;
     	speedup = mmrs/mmrn;
     	if ( CSV )
-    		fprintf( stderr, "%6.2lf,", speedup );
+		if ( i == 2 )
+    			fprintf( stderr, "%6.2lf\n", speedup );
+		else
+			fprintf( stderr, "%6.2lf,", speedup );
     	else
     		fprintf( stderr, "(%6.2lf)\n", speedup );
     	if ( DEBUG )
