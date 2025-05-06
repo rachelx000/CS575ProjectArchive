@@ -37,10 +37,7 @@
 #endif
 
 // print CSV?
-#define CSV			true
-
-// Extra credit?
-#define EC			false
+#define CSV		false
 
 
 ALIGNED float A[ARRAYSIZE];
