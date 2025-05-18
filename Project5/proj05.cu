@@ -228,10 +228,10 @@ main( int argc, char* argv[ ] )
 	// compute the probability:
 	float probability = 100.f * (float)numHits / (float)NUMTRIALS;
 
-//#define CSV
+#define CSV
 
 #ifdef CSV
-	fprintf( stderr, "%10d , %5d , %8.2lf\n", NUMTRIALS, BLOCKSIZE, megaTrialsPerSecond );
+	fprintf( stderr, "%10d , %5d , %8.2lf, %6.3f\n", NUMTRIALS, BLOCKSIZE, megaTrialsPerSecond, probability );
 #else
 	fprintf( stderr, "Trials = %10d, BlockSize = %5d, MegaTrials/Second = %8.2lf, Probability=%6.3f%%\n",
 		NUMTRIALS, BLOCKSIZE, megaTrialsPerSecond, probability );
