@@ -128,7 +128,7 @@ MonteCarlo( float *dvs, float *dths, float *dgs, float *dhs, float *dds, int *dh
 			// see if the ball hits the castle:
 			if( fabs( upperDist - d ) <= TOL )
 			{
-				numHits += 1;
+				dhits[gid] = 1;
 			}
 		} // if ball clears the cliff face
 	} // if ball gets as far as the cliff face
