@@ -277,13 +277,13 @@ main( int argc, char *argv[ ] )
 	Solve3( sumx4, sumx3, sumx2, sumx, sumx2y, sumxy, sumy, DATASIZE,   &Q, &L, &C );
 
 
-//#define CSV
+#define CSV
 
 #ifdef CSV
 	fprintf( stderr, "%8d , %6d , %10.2lf , %7.1f , %7.1f , %7.1f \n",
 		DATASIZE, LOCALSIZE, (double)DATASIZE/(time1-time0)/1000000., Q, L, C );
 #else
-	fprintf( stderr, "Array Size: %8d , Work Elements: %4d , MegaPointsProcessedPerSecond: %10.2lf, (%7.1f,%7.1f,%7.1f)\n",
+	fprintf( stderr, "Array Size: %8d , Work Elements: %4d , MegaPointsProcessedPerSecond: %10.2lf, ( Q: %7.1f, L: %7.1f, C: %7.1f)\n",
 		DATASIZE, LOCALSIZE, (double)DATASIZE/(time1-time0)/1000000., Q, L, C );
 #endif
 
@@ -431,8 +431,8 @@ SelectOpenclDevice()
 		fprintf(stderr, "I found no OpenCL devices!\n");
 		exit( 1 );
 	}
-	fprintf(stderr, "I have selected Platform #%d, Device #%d: ", bestPlatform, bestDevice);
-	fprintf(stderr, "Vendor = %s, Type = %s\n", Vendor(bestDeviceVendor), Type(bestDeviceType) );
+	//fprintf(stderr, "I have selected Platform #%d, Device #%d: ", bestPlatform, bestDevice);
+	//fprintf(stderr, "Vendor = %s, Type = %s\n", Vendor(bestDeviceVendor), Type(bestDeviceType) );
 }
 
 char *
