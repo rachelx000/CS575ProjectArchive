@@ -15,6 +15,5 @@ do
         do
                 g++ -DDATASIZE=$s -DLOCALSIZE=$b -o proj06 proj06.cpp /usr/local/apps/cuda/11.7/lib64/libOpenCL.so.1  -lm -fopenmp
                 ./proj06
-                rm ./proj06
         done
 done
