@@ -1,0 +1,6 @@
+Number of CPUs,Number of Elements,Performance (mega-sums per second)
+  1,    1048576,     33.41 
+  2,    1048576,     66.17
+  4,    1048576,    127.20
+  6,    1048576,    180.23
+  8,    1048576,    222.59

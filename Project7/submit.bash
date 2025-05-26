@@ -2,7 +2,7 @@
 
 #SBATCH -J Fourier
 #SBATCH -A cs475-575
-#SBATCH -p classmpitest
+#SBATCH -p classmpifinal
 #SBATCH -N 8
 #SBATCH -n 8
 #SBATCH -o fourier.out
