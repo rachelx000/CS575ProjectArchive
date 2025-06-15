@@ -15,3 +15,7 @@
     check if the variable `OpenMP_ROOT` is set correctly by `echo $OpenMP_ROOT`, which should
     output the path to `libomp`.
   - Finally, run the command `bash ProjectXMac.bash`
+
+ ## Note
+- Projects #5 and #6 are GPU programming projects that require a system equipped with a GPU to run.
+- Project #7 is an MPI project that must be run on a CPU cluster.
