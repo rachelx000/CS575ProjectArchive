@@ -7,7 +7,7 @@
     containing the downloaded files (you might upload the downloaded files from the local first via `scp`).
   - For Projects #1-6: Run the command `bash ProjectX.bash` on the Flip/Rabbit server
   - For Projects #5-7: Run the command `sbatch submit.bash` on the HPC server <br/><br/>
-- To run Project #1 - #4 on the **local MacOS system**:
+- To run Projects #1-4 on the **local MacOS system**:
   - Install the OpenMP library (if not already installed): `brew install libomp`
   - Set the OpenMP root path in your `~/.zshrc` file:
     - Create/Open the file by `vim ~/.zshrc`
